@@ -25,6 +25,25 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    productFlavors {
+        bbc {
+            buildConfigField 'String', 'SOURCE', '"bbc-news"'
+        }
+        alJazeera {
+            buildConfigField 'String', 'SOURCE', '"al-jazeera-english"'
+        }
+        ap {
+            buildConfigField 'String', 'SOURCE', '"associated-press"'
+        }
+        buzzFeed {
+            buildConfigField 'String', 'SOURCE', '"buzzfeed"'
+        }
+        cnn {
+            buildConfigField 'String', 'SOURCE', '"cnn"'
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
