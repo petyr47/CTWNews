@@ -97,4 +97,8 @@ dependencies {
     testImplementation "io.insert-koin:koin-test:3.3.2"
     testImplementation "io.insert-koin:koin-test-junit4:3.3.2"
 
+    //biometrics
+    implementation "androidx.biometric:biometric:1.1.0"
+    implementation "androidx.biometric:biometric-ktx:1.2.0-alpha05"
+
 }
