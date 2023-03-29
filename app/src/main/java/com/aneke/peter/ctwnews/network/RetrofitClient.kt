@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
 
-    private val baseUrl = "https://newsapi.org/v2/"
+    private const val baseUrl = "https://newsapi.org/v2/"
 
     fun makeApiService(): ApiInterface {
 

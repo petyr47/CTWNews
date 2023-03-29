@@ -10,13 +10,13 @@ import com.aneke.peter.ctwnews.utils.resolveMessage
 class HeadlineRepository(private val context : Context, private val service : ApiInterface) {
 
     suspend fun getHeadLines() : NewsResponse {
-        try {
+        return try {
             val key = context.getString(R.string.news_api_key)
             val source = BuildConfig.SOURCE
-            return service.getHeadlines(source, key)
+            service.getHeadlines(source, key)
         } catch (e: Exception) {
             e.printStackTrace()
-            return NewsResponse(success = false, message = e.resolveMessage())
+            NewsResponse(success = false, message = e.resolveMessage())
         }
     }
 

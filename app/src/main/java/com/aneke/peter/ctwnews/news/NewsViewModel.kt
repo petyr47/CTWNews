@@ -9,7 +9,7 @@ import com.aneke.peter.ctwnews.repository.HeadlineRepository
 import com.aneke.peter.ctwnews.utils.Resource
 import kotlinx.coroutines.launch
 
-class NewsViewModel(val repository: HeadlineRepository) : ViewModel() {
+class NewsViewModel(private val repository: HeadlineRepository) : ViewModel() {
 
     private val _headlineResponse = MutableLiveData<Resource<NewsResponse>>()
     val headlineResponse : LiveData<Resource<NewsResponse>>

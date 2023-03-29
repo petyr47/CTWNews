@@ -73,6 +73,10 @@ class MainActivity : AppCompatActivity() {
             BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
                 showHeadlines()
             }
+            BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED,
+            BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED, BiometricManager.BIOMETRIC_STATUS_UNKNOWN -> {
+                showHeadlines()
+            }
         }
     }
 

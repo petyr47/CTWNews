@@ -1,6 +1,9 @@
 package com.aneke.peter.ctwnews.utils
 
 import android.app.Activity
+import android.content.Intent
+import android.os.Build.VERSION.SDK_INT
+import android.os.Parcelable
 import androidx.appcompat.app.AlertDialog
 import com.aneke.peter.ctwnews.BuildConfig
 import org.json.JSONException
@@ -8,6 +11,8 @@ import org.json.JSONObject
 import retrofit2.HttpException
 import java.net.UnknownHostException
 import java.text.SimpleDateFormat
+import java.time.Instant
+import java.util.*
 
 fun Exception.resolveMessage() : String {
     var message = ""
@@ -17,8 +22,10 @@ fun Exception.resolveMessage() : String {
                 message = "Oops! Something went wrong on our servers"
             } else {
                 try {
-                    val body = JSONObject(this.response()?.errorBody()?.string())
-                    message = body.getString("message")
+                    val body = this.response()?.errorBody()?.string()?.let { JSONObject(it) }
+                    if (body != null) {
+                        message = body.getString("message")
+                    }
                 } catch (e : JSONException) {
                   message = "The application has encountered an unknown error"
                 }
@@ -51,17 +58,22 @@ fun Activity.showAlert(title : String = "Error", message : String, action: (() -
 
 fun String.convertToTimestamp() : Long {
    val date =  when (BuildConfig.FLAVOR) {
-        "bbc", "buzzFeed" ->  SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss'Z'").parse(this)
-        else -> SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(this)
+        Flavours.bbcFlavour, Flavours.buzzFeedFlavour ->  SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss'Z'", Locale.getDefault()).parse(this)
+        else -> SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).parse(this)
     }
-    return date.time
+    return date?.time ?: Instant.now().epochSecond
 }
 
 fun String.convertToDate() : String {
     val date =  when (BuildConfig.FLAVOR) {
-        "bbc" , "buzzFeed" ->  SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss'Z'").parse(this)
-        else -> SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(this)
+        Flavours.bbcFlavour, Flavours.buzzFeedFlavour ->  SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss'Z'", Locale.getDefault()).parse(this)
+        else -> SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).parse(this)
     }
-    val format = SimpleDateFormat("EEE, d MMM yyyy HH:mm")
-    return format.format(date)
+    val format = SimpleDateFormat("EEE, d MMM yyyy HH:mm", Locale.getDefault())
+    return date?.let { format.format(it) } ?: "--"
+}
+
+inline fun <reified T : Parcelable> Intent.parcelable(key: String): T? = when {
+    SDK_INT >= 33 -> getParcelableExtra(key, T::class.java)
+    else -> @Suppress("DEPRECATION") getParcelableExtra(key) as? T
 }
