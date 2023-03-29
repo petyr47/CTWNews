@@ -3,6 +3,7 @@ package com.aneke.peter.ctwnews.news
 import android.content.Intent
 import android.os.Bundle
 import com.aneke.peter.ctwnews.BuildConfig
+import com.aneke.peter.ctwnews.R
 import com.aneke.peter.ctwnews.databinding.ActivityNewsBinding
 import com.aneke.peter.ctwnews.detail.DetailActivity
 import com.aneke.peter.ctwnews.utils.LoadableActivity
@@ -22,7 +23,9 @@ class NewsActivity : LoadableActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityNewsBinding.inflate(layoutInflater)
 
-        newsViewModel.fetchHeadlines()
+        val key = getString(R.string.news_api_key)
+        val source = BuildConfig.SOURCE
+        newsViewModel.fetchHeadlines(key, source)
 
         setContentView(binding.root)
         title = BuildConfig.FLAVOR.uppercase(Locale.getDefault())
