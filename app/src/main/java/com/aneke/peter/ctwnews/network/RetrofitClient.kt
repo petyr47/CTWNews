@@ -20,19 +20,19 @@ object RetrofitClient {
 
         return Retrofit.Builder()
             .baseUrl(baseUrl)
-            .client(provideOkHttpClient(provideLoggingInterceptor()))
+            .client(provideOkHttpClient())
             .addConverterFactory(
                 MoshiConverterFactory.create(moshi)
                 .asLenient())
             .build().create(ApiInterface::class.java)
     }
 
-    private fun provideOkHttpClient(interceptor: HttpLoggingInterceptor): OkHttpClient {
+    private fun provideOkHttpClient(): OkHttpClient {
         val b = OkHttpClient.Builder()
         b.connectTimeout(60, TimeUnit.SECONDS)
         b.readTimeout(60, TimeUnit.SECONDS)
         b.writeTimeout(60, TimeUnit.SECONDS)
-        b.addInterceptor(interceptor)
+        b.addInterceptor(provideLoggingInterceptor())
         return b.build()
     }
 
