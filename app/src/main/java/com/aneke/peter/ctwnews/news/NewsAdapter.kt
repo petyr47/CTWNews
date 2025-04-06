@@ -23,7 +23,7 @@ class NewsAdapter(val onItemClickListener : (Article) -> Unit) : ListAdapter<Art
     override fun onBindViewHolder(holder: NewsHolder, position: Int) =
         holder.bindArticle(getItem(position))
 
-    inner class NewsHolder(val binding : ItemNewsBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class NewsHolder(private val binding : ItemNewsBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bindArticle(article : Article) {
             binding.itemTitle.text = article.title

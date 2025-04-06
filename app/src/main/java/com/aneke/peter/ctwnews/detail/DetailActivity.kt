@@ -8,12 +8,14 @@ import com.aneke.peter.ctwnews.BuildConfig
 import com.aneke.peter.ctwnews.R
 import com.aneke.peter.ctwnews.databinding.ActivityDetailBinding
 import com.aneke.peter.ctwnews.utils.convertToDate
+import com.aneke.peter.ctwnews.utils.parcelable
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
 class DetailActivity : AppCompatActivity() {
 
-    lateinit var binding : ActivityDetailBinding
-    val detailViewModel : DetailViewModel by viewModel()
+    private lateinit var binding : ActivityDetailBinding
+    private val detailViewModel : DetailViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,9 +23,9 @@ class DetailActivity : AppCompatActivity() {
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        detailViewModel.article.value = intent.getParcelableExtra("article")
+        detailViewModel.article.value = intent.parcelable("article")
 
-        title = BuildConfig.FLAVOR.toUpperCase()
+        title = BuildConfig.FLAVOR.uppercase(Locale.getDefault())
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         detailViewModel.article.observe(this) {
@@ -43,7 +45,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.getItemId()) {
+        when (item.itemId) {
             android.R.id.home -> {
                 finish()
                 return true

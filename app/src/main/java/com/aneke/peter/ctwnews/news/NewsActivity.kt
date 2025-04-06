@@ -3,6 +3,7 @@ package com.aneke.peter.ctwnews.news
 import android.content.Intent
 import android.os.Bundle
 import com.aneke.peter.ctwnews.BuildConfig
+import com.aneke.peter.ctwnews.R
 import com.aneke.peter.ctwnews.databinding.ActivityNewsBinding
 import com.aneke.peter.ctwnews.detail.DetailActivity
 import com.aneke.peter.ctwnews.utils.LoadableActivity
@@ -10,21 +11,24 @@ import com.aneke.peter.ctwnews.utils.Status
 import com.aneke.peter.ctwnews.utils.convertToTimestamp
 import com.aneke.peter.ctwnews.utils.showAlert
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
 class NewsActivity : LoadableActivity() {
 
-    lateinit var binding : ActivityNewsBinding
-    lateinit var adapter: NewsAdapter
-    val newsViewModel : NewsViewModel by viewModel()
+    private lateinit var binding : ActivityNewsBinding
+    private lateinit var adapter: NewsAdapter
+    private val newsViewModel : NewsViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityNewsBinding.inflate(layoutInflater)
 
-        newsViewModel.fetchHeadlines()
+        val key = getString(R.string.news_api_key)
+        val source = BuildConfig.SOURCE
+        newsViewModel.fetchHeadlines(key, source)
 
         setContentView(binding.root)
-        title = BuildConfig.FLAVOR.toUpperCase()
+        title = BuildConfig.FLAVOR.uppercase(Locale.getDefault())
 
         adapter = NewsAdapter { article ->
             val intent = Intent(this, DetailActivity::class.java)
@@ -39,7 +43,7 @@ class NewsActivity : LoadableActivity() {
                 when (resource.status) {
                     Status.SUCCESS -> {
                         hideLoader()
-                        val headlines = resource.data?.articles?.sortedByDescending { it.publishedAt.convertToTimestamp() }
+                        val headlines = resource.data?.articles?.sortedByDescending { article -> article.publishedAt.convertToTimestamp() }
                         adapter.submitList(headlines)
                     }
                     Status.LOADING -> {
